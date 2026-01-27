@@ -1,1 +1,82 @@
+// assets/js/main.js
+
+// Footer year (if you have <span id="year"></span>)
 document.getElementById("year")?.append(new Date().getFullYear());
+
+// -------------------------
+// Theme toggle (light/dark)
+// -------------------------
+(function () {
+  const STORAGE_KEY = "ieee_csun_theme"; // "light" | "dark"
+  const body = document.body;
+
+  // Apply saved theme if exists
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved === "light") body.classList.add("theme-light");
+  if (saved === "dark") body.classList.remove("theme-light");
+
+  // Wire toggle button if present
+  const toggleBtn = document.querySelector("[data-theme-toggle]");
+  if (!toggleBtn) return;
+
+  const syncLabel = () => {
+    const isLight = body.classList.contains("theme-light");
+    toggleBtn.setAttribute("aria-pressed", isLight ? "true" : "false");
+    toggleBtn.textContent = isLight ? "Dark mode" : "Light mode";
+  };
+
+  toggleBtn.addEventListener("click", () => {
+    body.classList.toggle("theme-light");
+    localStorage.setItem(STORAGE_KEY, body.classList.contains("theme-light") ? "light" : "dark");
+    syncLabel();
+  });
+
+  syncLabel();
+})();
+
+// -------------------------
+// Go to top button
+// -------------------------
+(() => {
+  const toTopBtn = document.querySelector(".to-top");
+  if (!toTopBtn) return;
+
+  const toggleVisibility = () => {
+    if (window.scrollY > 280) toTopBtn.classList.add("to-top--visible");
+    else toTopBtn.classList.remove("to-top--visible");
+  };
+
+  window.addEventListener("scroll", toggleVisibility, { passive: true });
+  toggleVisibility();
+
+  toTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+})();
+
+// -------------------------
+// Resources tabs (if on page)
+// -------------------------
+(() => {
+  const tabs = document.querySelectorAll(".res-tab");
+  const panels = document.querySelectorAll(".res-panel");
+  if (!tabs.length || !panels.length) return;
+
+  const activate = (cat) => {
+    tabs.forEach((t) => {
+      const isActive = t.dataset.cat === cat;
+      t.classList.toggle("res-tab--active", isActive);
+      t.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+
+    panels.forEach((p) => {
+      const panelName = p.dataset.panel;
+      p.hidden = cat === "all" ? panelName !== "all" : panelName !== cat;
+    });
+  };
+
+  tabs.forEach((tab) => tab.addEventListener("click", () => activate(tab.dataset.cat || "all")));
+
+  const allTab = document.querySelector('.res-tab[data-cat="all"]');
+  activate(allTab?.dataset.cat || tabs[0].dataset.cat || "all");
+})();
