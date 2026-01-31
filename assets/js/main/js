@@ -6,53 +6,77 @@ document.getElementById("year")?.append(new Date().getFullYear());
 // -------------------------
 // Theme toggle (light/dark)
 // -------------------------
+// -------------------------
+// Theme toggle (light/dark)
+// -------------------------
 (function () {
-  const STORAGE_KEY = "ieee_csun_theme"; // "light" | "dark"
+  const STORAGE_KEY = "ieee_csun_theme";
   const body = document.body;
-
-  // Apply saved theme if exists
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved === "light") body.classList.add("theme-light");
-  if (saved === "dark") body.classList.remove("theme-light");
-
-  // Wire toggle button if present
   const toggleBtn = document.querySelector("[data-theme-toggle]");
+
+  const applyTheme = (mode) => {
+  const isLight = mode === "light";
+
+  body.classList.toggle("theme-light", isLight);
+  body.classList.toggle("theme-dark", !isLight);
+
+  localStorage.setItem(STORAGE_KEY, mode);
+
+  if (toggleBtn) {
+    // label shows the action after clicking
+    toggleBtn.textContent = isLight ? "Dark mode" : "Light mode";
+    toggleBtn.setAttribute("aria-pressed", String(!isLight));
+  }
+};
+
+
+  const saved = localStorage.getItem(STORAGE_KEY);
+  applyTheme(saved === "light" ? "light" : "dark");
+
   if (!toggleBtn) return;
 
-  const syncLabel = () => {
-    const isLight = body.classList.contains("theme-light");
-    toggleBtn.setAttribute("aria-pressed", isLight ? "true" : "false");
-    toggleBtn.textContent = isLight ? "Dark mode" : "Light mode";
-  };
-
   toggleBtn.addEventListener("click", () => {
-    body.classList.toggle("theme-light");
-    localStorage.setItem(STORAGE_KEY, body.classList.contains("theme-light") ? "light" : "dark");
-    syncLabel();
+    const next = body.classList.contains("theme-light") ? "dark" : "light";
+    applyTheme(next);
   });
-
-  syncLabel();
 })();
+
+
 
 // -------------------------
 // Go to top button
 // -------------------------
-(() => {
-  const toTopBtn = document.querySelector(".to-top");
-  if (!toTopBtn) return;
+// -------------------------
+// Go to top button (robust init)
+// -------------------------
+(function initToTop() {
+  const setup = () => {
+    const btn = document.querySelector(".to-top");
+    if (!btn) return;
 
-  const toggleVisibility = () => {
-    if (window.scrollY > 280) toTopBtn.classList.add("to-top--visible");
-    else toTopBtn.classList.remove("to-top--visible");
+    const toggle = () => {
+      if (window.scrollY > 300) btn.classList.add("to-top--visible");
+      else btn.classList.remove("to-top--visible");
+    };
+
+    window.addEventListener("scroll", toggle, { passive: true });
+    toggle();
+
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
   };
 
-  window.addEventListener("scroll", toggleVisibility, { passive: true });
-  toggleVisibility();
+  // Run now (script is at bottom so button should exist)
+  setup();
 
-  toTopBtn.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
+  // Also run after DOMContentLoaded as a fallback
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setup);
+  }
 })();
+
+
 
 // -------------------------
 // Resources tabs (if on page)
