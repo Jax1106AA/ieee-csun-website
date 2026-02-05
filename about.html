@@ -11,10 +11,10 @@
   <!-- Navigation -->
   <header class="nav">
     <div class="container nav-inner">
-      <a class="logo" href="index.html">
-        <span class="logo-mark"></span>
-        <span class="logo-text">IEEE CSUN</span>
-      </a>
+      <a class="logo logo-only" href="about.html">
+  <img src="assets/img/brand/ieee-csun-logo.png" alt="IEEE CSUN">
+</a>
+
 
 
 
@@ -64,26 +64,32 @@
         </div>
 
         <aside class="about-media card-light">
-          <div class="media-frame">
-            <img
-              src="assets/img/about-hero.jpg"
-              alt="IEEE CSUN workshop or meeting"
-              onerror="this.style.display='none'; document.getElementById('aboutFallback').style.display='flex';"
-            />
-            <div id="aboutFallback" class="media-fallback" style="display:none;">
-              <div class="play-circle">▶</div>
-              <div>
-                <div class="media-fallback-title">Add a photo or video</div>
-                <div class="media-fallback-sub">Workshops • Projects • Meetings</div>
-              </div>
-            </div>
-          </div>
+  <div class="media-frame">
+    <video
+      src="assets/video/about.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+    ></video>
 
-          <div class="media-caption">
-            <div class="caption-title">What we do</div>
-            <div class="caption-sub">Learning by doing</div>
-          </div>
-        </aside>
+    <!-- Optional overlay (keeps your design language) -->
+    <div class="media-fallback">
+      <div class="play-circle">▶</div>
+      <div>
+        <div class="media-fallback-title">IEEE CSUN</div>
+        <div class="media-fallback-sub">Workshops • Projects • Meetings</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="media-caption">
+    <div class="caption-title">What we do</div>
+    <div class="caption-sub">Learning by doing</div>
+  </div>
+</aside>
+
       </div>
     </section>
 
